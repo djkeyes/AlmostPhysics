@@ -31,8 +31,11 @@ public class Updater implements ActionListener {
 			Particle a = i.next();
 			for (ListIterator<Particle> j = particles.listIterator(); j
 					.nextIndex() < index;) {
+				// Create an Interaction object to calculate forces resulting from the interactions
 				Particle b = j.next();
-				a.interact(b);
+				
+				Interaction interaction = new Interaction(a, b);
+				interaction.calculate();
 			}
 		}
 		for (Particle p : particles) {

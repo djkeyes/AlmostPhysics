@@ -24,8 +24,6 @@ public class ParticleMouseInput implements MouseListener, KeyListener{
 	}
 	@Override
 	public void mouseClicked(MouseEvent arg0) {
-		// TODO: make these charges customizable
-//		particles.add(new ChargedParticle(new Vec3D(arg0.getX(), arg0.getY(), 0), 5, 0.01));
 	}
 
 	@Override
@@ -51,7 +49,7 @@ public class ParticleMouseInput implements MouseListener, KeyListener{
 		double k = 1; // scalar to make input more user-friendly
 		Vec3D v = new Vec3D(lastMouseDown.x - mouseUp.x, lastMouseDown.y - mouseUp.y, 0);
 		v.mult(k);
-		Particle p = new ChargedParticle(new Vec3D(arg0.getX(), arg0.getY(), 0), v, 5, 0.01);
+		Particle p = new Particle(new Vec3D(arg0.getX(), arg0.getY(), 0), 5, 0.01, v);
 		if(arg0.isAltDown()){
 			p.setStationary(true);
 		}

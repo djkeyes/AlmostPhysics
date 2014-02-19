@@ -3,39 +3,63 @@ import java.util.List;
 
 public class Particle {
 
-	// constants
-
-	// the minimum distance to treat two particles
-	// this gives a finite cap the the acceleration of two particles
-	private final double MIN_DISTANCE = 0.0001; // Double.MIN_VALUE;
-	private final double DAMPING_COEFFCIENT = 0.1;
 
 	// instance variables
 	private boolean isDamped = false;
 	private boolean isStatic = false;
+	
+	private final double DAMPING_COEFFCIENT = 0.1;
 
 	// position, velocity, acceleration
 	protected Vec3D x, v, a;
 	private LinkedList<Vec3D> xOld;
+	// TODO: shit crashes if this is false
+	private static final boolean STORE_OLD_POSITIONS = true;
+	private static final int MAX_XOLD_TO_KEEP = 100;
+
+
+	// mass
+	double m;
+	
+	double q;
+
 
 	// constructors
-	public Particle(Vec3D x) {
-		this(x, new Vec3D());
+	public Particle(Vec3D x, double mass) {
+		this(x, mass, new Vec3D());
+	}
+	// constructors
+	public Particle(Vec3D x, double mass, double charge) {
+		this(x, mass, charge, new Vec3D());
 	}
 
-	public Particle(Vec3D x, Vec3D v) {
+	// constructors
+	public Particle(Vec3D x, double mass, Vec3D v) {
+		this(x, mass, 0,v);
+	}
+
+	public Particle(Vec3D x, double mass, double charge, Vec3D v) {
 		this.x = x;
-		this.xOld = new LinkedList<Vec3D>();
-		xOld.add(x);
 		this.v = v;
 		this.a = new Vec3D();
+		this.m = mass;
+		this.q = charge;
+		
+		if(STORE_OLD_POSITIONS){
+			this.xOld = new LinkedList<Vec3D>();
+			xOld.add(x);
+		}
 	}
 
 	// public member functions
 	public void update(double stepSize) {
 		if (!isStatic) {
-			// xOld = new Vec3D(x);
-			xOld.add(x);
+			if(STORE_OLD_POSITIONS){
+				xOld.addLast(x);
+				if(xOld.size() > MAX_XOLD_TO_KEEP){
+					xOld.removeFirst();
+				}
+			}
 
 			x = Vec3D.add(x, Vec3D.mult(v, stepSize),
 					Vec3D.mult(a, stepSize * stepSize));
@@ -79,12 +103,6 @@ public class Particle {
 	// }
 	public LinkedList<Vec3D> getXOld() {
 		return xOld;
-	}
-
-	// @Override
-	public void interact(Particle other) {
-		// do nothing
-
 	}
 
 	public void setStationary(boolean isStatic) {

@@ -29,9 +29,8 @@ public class ParticleDisplay extends Canvas implements IParticleDisplay {
 	public void redraw(List<Particle> particles) {
 		final BufferStrategy bufferStrategy = this.getBufferStrategy();
 
-		Graphics2D g = (Graphics2D) bufferStrategy.getDrawGraphics();// bufferStrategy.getDrawGraphics();
+		Graphics2D g = (Graphics2D) bufferStrategy.getDrawGraphics();
 		g.setColor(Color.white);
-		// Graphics2D g = (Graphics2D)this.getGraphics();
 
 		for (Particle p : particles) {
 			// consider adding a draw() method to Particle
@@ -46,19 +45,20 @@ public class ParticleDisplay extends Canvas implements IParticleDisplay {
 			}
 
 			if(drawPaths){
-			g.setColor(Color.BLACK);
-			Vec3D next = null;
-			// only draw the last few
-			Iterator<Vec3D> it = p.getXOld().descendingIterator();
-			for (int i = 0; i < 100; i++) {
-				if (it.hasNext()) {
-					Vec3D oldPos = it.next();
-					if (next != null)
-						g.drawLine((int) next.v1, (int) next.v2,
-								(int) oldPos.v1, (int) oldPos.v2);
-					next = oldPos;
+				g.setColor(Color.BLACK);
+				Vec3D next = null;
+				// only draw the last few
+				// TODO I just broke this by disabling xOld
+				Iterator<Vec3D> it = p.getXOld().descendingIterator();
+				for (int i = 0; i < p.getXOld().size(); i++) {
+					if (it.hasNext()) {
+						Vec3D oldPos = it.next();
+						if (next != null)
+							g.drawLine((int) next.v1, (int) next.v2,
+									(int) oldPos.v1, (int) oldPos.v2);
+						next = oldPos;
+					}
 				}
-			}
 			}
 
 			x = (int) Math.round(p.getX());
