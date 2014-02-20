@@ -5,6 +5,9 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.List;
 
+import particles.Particle;
+import util.Vec3D;
+
 
 public class ParticleMouseInput implements MouseListener, KeyListener{
 	

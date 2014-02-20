@@ -5,6 +5,10 @@ import java.util.ListIterator;
 
 import javax.swing.Timer;
 
+import particles.Interaction;
+import particles.InteractionNetwork;
+import particles.Particle;
+
 public class Updater implements ActionListener {
 	private Timer timer;
 	private IParticleDisplay display;
@@ -26,18 +30,9 @@ public class Updater implements ActionListener {
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
 		// update all the positions
-		int index = 0;
-		for (ListIterator<Particle> i = particles.listIterator(); i.hasNext(); index++) {
-			Particle a = i.next();
-			for (ListIterator<Particle> j = particles.listIterator(); j
-					.nextIndex() < index;) {
-				// Create an Interaction object to calculate forces resulting from the interactions
-				Particle b = j.next();
-				
-				Interaction interaction = new Interaction(a, b);
-				interaction.calculate();
-			}
-		}
+		InteractionNetwork network = new InteractionNetwork(particles);
+		network.applyInteractions();
+		
 		for (Particle p : particles) {
 			// timer stores the delay in ms, but our simulation runs in seconds.
 			// consider standardizing this, or moving the conversion to a more
@@ -49,8 +44,6 @@ public class Updater implements ActionListener {
 		if (display != null) {
 			display.redraw(particles);
 		}
-		
-		
 	}
 
 	public void start() {

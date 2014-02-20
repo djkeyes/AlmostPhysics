@@ -5,6 +5,9 @@ import java.util.ArrayList;
 
 import javax.swing.JFrame;
 
+import particles.Particle;
+import util.Vec3D;
+
 
 public class Simulation {
 	

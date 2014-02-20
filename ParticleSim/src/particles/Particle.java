@@ -2,6 +2,8 @@ package particles;
 import java.util.LinkedList;
 import java.util.List;
 
+import util.Vec3D;
+
 public class Particle {
 
 
@@ -12,17 +14,15 @@ public class Particle {
 	private final double DAMPING_COEFFCIENT = 0.1;
 
 	// position, velocity, acceleration
-	protected Vec3D x, v, a;
+	protected Vec3D x, v, a; // package+protected access
 	private LinkedList<Vec3D> xOld;
 	// TODO: shit crashes if this is false
 	private static final boolean STORE_OLD_POSITIONS = true;
 	private static final int MAX_XOLD_TO_KEEP = 100;
 
-
 	// mass
-	private double m;
-	
-	private double q;
+	protected double m; // package+protected
+	protected double q; // package+protected
 
 
 	// constructors

@@ -7,6 +7,9 @@ import java.awt.image.BufferStrategy;
 import java.util.Iterator;
 import java.util.List;
 
+import particles.Particle;
+import util.Vec3D;
+
 /**
  * Displays particles on a 2D screen. Uses an orthogonal projection, so the
  * z-component of position is discarded when displaying the particle. Any new
