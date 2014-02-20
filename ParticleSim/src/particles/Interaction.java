@@ -1,3 +1,4 @@
+package particles;
 public class Interaction {
 
 

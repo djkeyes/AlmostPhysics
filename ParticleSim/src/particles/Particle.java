@@ -1,3 +1,4 @@
+package particles;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -19,9 +20,9 @@ public class Particle {
 
 
 	// mass
-	double m;
+	private double m;
 	
-	double q;
+	private double q;
 
 
 	// constructors

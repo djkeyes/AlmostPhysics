@@ -1,3 +1,4 @@
+package util;
 /**
  * A class representing a 3D vector. It contains 3 double-precision attributes
  * to represent 3 orthogonal dimensions.
