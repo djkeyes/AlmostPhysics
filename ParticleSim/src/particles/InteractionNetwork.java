@@ -1,5 +1,6 @@
 package particles;
 
+import java.util.LinkedList;
 import java.util.List;
 import java.util.ListIterator;
 
@@ -10,6 +11,7 @@ public class InteractionNetwork {
 	}
 	
 	public void applyInteractions(){
+		List<Interaction> interactions = new LinkedList<Interaction>();
 
 		int index = 0;
 		for (ListIterator<Particle> i = particles.listIterator(); i.hasNext(); index++) {
@@ -20,8 +22,12 @@ public class InteractionNetwork {
 				Particle b = j.next();
 				
 				Interaction interaction = new Interaction(a, b);
-				interaction.calculate();
+				interactions.add(interaction);
 			}
+		}
+		
+		for(Interaction interaction : interactions){
+			interaction.calculate();
 		}
 	}
 }

@@ -17,13 +17,14 @@ public class Interaction {
 
 	public void calculate() {
 		Vec3D f = defaultForceModel.calcForce(first, second);
+		System.out.println(f.mag());
 
 		// calculate the acceleration on each object
 		// F = ma; a = F / m
 		Vec3D a1 = new Vec3D(f);
-		a1.mult(1 / first.m);
+		a1.mult(1 / Math.abs(first.m));
 		Vec3D a2 = new Vec3D(f);
-		a2.mult(1 / second.m);
+		a2.mult(1 / Math.abs(second.m));
 		a2.invert(); // newton's third law: forces are equal and opposite
 
 		first.a.add(a1);
