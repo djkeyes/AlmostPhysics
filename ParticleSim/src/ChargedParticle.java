@@ -28,13 +28,13 @@ public class ChargedParticle extends MassiveParticle {
 			// F = u * q1 * q2 / r^2, in the direction of r
 			// this is equivilant to
 			// F = u * q1 * q2 / |r|^3
-			Vec3D f = Vec3D.mult(r, COLOUMBS_CONSTANT * this.q * cother.q
-					/ (Math.pow(r.mag(), 3)));
+//			Vec3D f = Vec3D.mult(r, COLOUMBS_CONSTANT * this.q * cother.q
+//					/ (Math.pow(r.mag(), 3)));
 			
 //			// experiment: let be Gaussian
 //			// F = k e^-(x^2)
-//			double c = 1000;
-//			Vec3D f = Vec3D.mult(r, COLOUMBS_CONSTANT * this.q * cother.q * Math.exp(-(r.mag()*r.mag())/c));
+			double c = 1000;
+			Vec3D f = Vec3D.mult(r, COLOUMBS_CONSTANT * this.q * cother.q * Math.exp(-(r.mag()*r.mag())/c));
 
 			// calculate the acceleration on each object
 			this.applyForce(f);
