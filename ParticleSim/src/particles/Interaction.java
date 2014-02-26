@@ -17,7 +17,7 @@ public class Interaction {
 
 	public void calculate() {
 		Vec3D f = defaultForceModel.calcForce(first, second);
-		System.out.println(f.mag());
+//		System.out.println(f.mag());
 
 		// calculate the acceleration on each object
 		// F = ma; a = F / m
