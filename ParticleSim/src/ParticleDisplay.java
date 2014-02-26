@@ -21,7 +21,7 @@ import util.Vec3D;
 @SuppressWarnings("serial")
 public class ParticleDisplay extends Canvas implements IParticleDisplay {
 
-	private boolean drawPaths = true;
+	private boolean drawPaths = false;
 	
 	public ParticleDisplay() {
 		// this.bufferStrategy = bufferStrategy;

@@ -21,7 +21,7 @@ public class Simulation {
 		JFrame frame = new JFrame();
 
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.setPreferredSize(new Dimension(480, 640));
+		frame.setPreferredSize(new Dimension(640, 480));
 		frame.setIgnoreRepaint(true);
 
 		int refreshRate = 10; // redraw every 10 milliseconds
