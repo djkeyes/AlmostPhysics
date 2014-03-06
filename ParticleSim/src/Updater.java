@@ -7,12 +7,14 @@ import javax.swing.Timer;
 import particles.InteractionNetwork;
 import particles.Particle;
 import plotting.RealtimePlot;
+import util.Vec3D;
 
 public class Updater implements ActionListener {
 	private Timer timer;
 	private IParticleDisplay display;
 	private List<Particle> particles;
 
+	private int nSteps;
 	// this plots two things
 	// one: the "lag" time--the time it takes between calling a function and calling it again
 	// two: the "processing" time--the time it takes from the start of a single update to the end
@@ -20,25 +22,40 @@ public class Updater implements ActionListener {
 	// plotting)--except when the processing time is greater than the refresh rate. In that case, the lag time should remain fairly
 	// stable, but the time to process a single function should increase, since it must wait for the previous
 	// function to finish running.
-	private static final boolean plotTimestepVsRealtime = true;
+	private static final boolean plotTimestepVsRealtime = false;
 	private long lastTime;
-	private int nSteps;
 	private RealtimePlot timeLagPlot;
 	private final String lagDataSeriesName = "Time Lag";
 	private final String updateTimeDataSeriesName = "Time Required";
+	
+	// hopefully this plot is straightforward
+	private static final boolean plotTotalMomentum = true;
+	private RealtimePlot momentumPlot;
+	private final String momentumXDataSeriesName = "X Momentum";
+	private final String momentumYDataSeriesName = "Y Momentum";
+	private final String momentumZDataSeriesName = "Z Momentum";
 
 	public Updater(int refreshRate, List<Particle> particles) {
 		timer = new Timer(refreshRate, this);
 		this.particles = particles;
 
+
+		nSteps = 0;
 		if (plotTimestepVsRealtime) {
 			lastTime = System.currentTimeMillis();
-			nSteps = 0;
 			timeLagPlot = new RealtimePlot("Key time metrics for each timestep", "Number of simulation timesteps",
 					"Time elapsed (ms)", 300);
 			timeLagPlot.addDataSeries(lagDataSeriesName);
 			timeLagPlot.addDataSeries(updateTimeDataSeriesName);
 			timeLagPlot.setVisible(true);
+		}
+		if (plotTotalMomentum) {
+			momentumPlot = new RealtimePlot("Momentum vs time", "Number of simulation timesteps",
+					"Total momtum of particle system", 100);
+			momentumPlot.addDataSeries(momentumXDataSeriesName);
+			momentumPlot.addDataSeries(momentumYDataSeriesName);
+			momentumPlot.addDataSeries(momentumZDataSeriesName);
+			momentumPlot.setVisible(true);
 		}
 	}
 
@@ -78,8 +95,20 @@ public class Updater implements ActionListener {
 			timeLagPlot.addData(updateTimeDataSeriesName, nSteps, diff);
 
 			lastTime = curTime;
-			nSteps++;
 		}
+		if(plotTotalMomentum){
+			double momentumX = 0, momentumY = 0, momentumZ = 0;
+			for(Particle p : particles){
+				Vec3D momentumVec = p.getMomentum();
+				momentumX += momentumVec.v1;
+				momentumY += momentumVec.v2;
+				momentumZ += momentumVec.v3;
+			}
+			momentumPlot.addData(momentumXDataSeriesName, nSteps, momentumX);
+			momentumPlot.addData(momentumYDataSeriesName, nSteps, momentumY);
+			momentumPlot.addData(momentumZDataSeriesName, nSteps, momentumZ);
+		}
+		nSteps++;
 	}
 
 	public void start() {

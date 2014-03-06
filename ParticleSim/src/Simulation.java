@@ -14,7 +14,7 @@ public class Simulation {
 	public static void main(String[] args){
 		ArrayList<Particle> particles = new ArrayList<Particle>();
 
-		particles.add(new Particle(new Vec3D(180,120,0), 5000d, 5));
+//		particles.add(new Particle(new Vec3D(180,120,0), 5000d, 5));
 //		particles.add(new Particle(new Vec3D(300,140,0), 5, 5));
 //		particles.add(new Particle(new Vec3D(240,300,0), 50000d, 0.15));
 

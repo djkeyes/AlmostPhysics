@@ -16,8 +16,8 @@ public enum Force {
 	}), C_4TH_INVERSE_M_SQUARE_INVERSE(new ForceFunction() {
 		public Vec3D calcForce(Particle first, Particle second) {
 			Vec3D r = Vec3D.subtract(first.x, second.x);
-			double g = 100000;
-			double c = 1000000000000d;
+			double g = 1900;
+			double c = 1900000000d;
 			Vec3D f = Vec3D.add(Vec3D.mult(r, -g * first.m * second.m / (Math.pow(r.mag(), 3))),
 					Vec3D.mult(r, c*first.q * second.q / (Math.pow(r.mag(), 4))));
 			return f;
@@ -26,7 +26,7 @@ public enum Force {
 		public Vec3D calcForce(Particle first, Particle second) {
 			// only gravity
 			Vec3D r = Vec3D.subtract(first.x, second.x);
-			double g = 100000;
+			double g = 1900;
 			Vec3D f = Vec3D.mult(r, -g * first.m * second.m / (Math.pow(r.mag(), 3)));
 			return f;
 		}
@@ -48,6 +48,7 @@ public enum Force {
 		if(ENABLE_MAX_FORCE && force.mag() > MAX_FORCE){
 			force.mult(MAX_FORCE/force.mag());
 		}
+		System.out.println(force.mag());
 		return force;
 	}
 

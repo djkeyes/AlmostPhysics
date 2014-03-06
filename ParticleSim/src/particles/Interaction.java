@@ -1,5 +1,6 @@
 package particles;
 
+import plotting.RealtimePlot;
 import util.Vec3D;
 
 public class Interaction {

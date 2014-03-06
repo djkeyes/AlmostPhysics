@@ -118,4 +118,7 @@ public class Particle {
 	protected Vec3D displacement(Particle other) {
 		return Vec3D.subtract(this.x, other.x);
 	}
+	public Vec3D getMomentum() {
+		return Vec3D.mult(v, m);
+	}
 }
