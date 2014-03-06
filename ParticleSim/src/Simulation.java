@@ -24,7 +24,7 @@ public class Simulation {
 		frame.setPreferredSize(new Dimension(640, 480));
 		frame.setIgnoreRepaint(true);
 
-		int refreshRate = 10; // redraw every 10 milliseconds
+		int refreshRate = 50; // redraw every 50 milliseconds
 		ParticleDisplay displayPanel = new ParticleDisplay();
 		Updater updater = new Updater(refreshRate, particles, displayPanel);
 

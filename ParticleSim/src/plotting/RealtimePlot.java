@@ -38,23 +38,23 @@ public class RealtimePlot {
 
 	private ApplicationFrame appFrame;
 	private XYSeriesCollection dataset;
+	
+	private int maxValsToKeep;
 
 	/**
-	 * A demonstration application showing how to create a simple time series chart. This example uses monthly data.
-	 * 
-	 * @param title
-	 *            the frame title.
+	 * @param title chart title
+	 * @param xAxisLabel x axis label
+	 * @param yAxisLabel y axis label
+	 * @param maxValsToKeep the number of values to keep in any dataset before discarding values. 0 to keep all values.
 	 */
-	public RealtimePlot(String title, String xAxisLabel, String yAxisLabel) {
+	public RealtimePlot(String title, String xAxisLabel, String yAxisLabel, int maxValsToKeep) {
+		this.maxValsToKeep = maxValsToKeep;
+		
 		appFrame = new ApplicationFrame(title);
 
 		dataset = new XYSeriesCollection();
 
-		JFreeChart chart = ChartFactory.createXYLineChart("XY Line Plot", // title
-				"X values", // x-axis label
-				"Y values", // y-axis label
-				dataset // data
-				);
+		JFreeChart chart = ChartFactory.createXYLineChart(title,xAxisLabel,yAxisLabel,dataset);
 
 		// so many options!
 		chart.setBackgroundPaint(Color.white);
@@ -84,6 +84,9 @@ public class RealtimePlot {
 		appFrame.pack();
 		RefineryUtilities.centerFrameOnScreen(appFrame);
 	}
+	public RealtimePlot(String title, String xAxisLabel, String yAxisLabel) {
+		this(title, xAxisLabel, yAxisLabel, 0);
+	}
 
 	public void addDataSeries(String key) {
 		XYSeries dataSeries = new XYSeries(key);
@@ -94,6 +97,9 @@ public class RealtimePlot {
 	public void addData(String key, double x, double y) {
 		dataset.getSeries(key).add(x, y);
 		appFrame.repaint();
+		if(maxValsToKeep > 0 && dataset.getSeries(key).getItemCount() > maxValsToKeep){
+			dataset.getSeries(key).remove(0);
+		}
 	}
 
 	public void setVisible(boolean isVisible) {
