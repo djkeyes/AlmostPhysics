@@ -27,7 +27,7 @@ public class Updater implements ActionListener {
 	private RealtimePlot timeLagPlot;
 	private final String lagDataSeriesName = "Time Lag";
 	private final String updateTimeDataSeriesName = "Time Required";
-	
+
 	// hopefully this plot is straightforward
 	private static final boolean plotTotalMomentum = true;
 	private RealtimePlot momentumPlot;
@@ -35,10 +35,16 @@ public class Updater implements ActionListener {
 	private final String momentumYDataSeriesName = "Y Momentum";
 	private final String momentumZDataSeriesName = "Z Momentum";
 
+	private static final boolean plotMomentumDiff = true;
+	private RealtimePlot momentumDiffPlot;
+	private double prevMomentumX, prevMomentumY, prevMomentumZ;
+	private final String momentumXDiffDataSeriesName = "X Momentum";
+	private final String momentumYDiffDataSeriesName = "Y Momentum";
+	private final String momentumZDiffDataSeriesName = "Z Momentum";
+
 	public Updater(int refreshRate, List<Particle> particles) {
 		timer = new Timer(refreshRate, this);
 		this.particles = particles;
-
 
 		nSteps = 0;
 		if (plotTimestepVsRealtime) {
@@ -50,12 +56,20 @@ public class Updater implements ActionListener {
 			timeLagPlot.setVisible(true);
 		}
 		if (plotTotalMomentum) {
-			momentumPlot = new RealtimePlot("Momentum vs time", "Number of simulation timesteps",
-					"Total momtum of particle system", 100);
+			momentumPlot = new RealtimePlot("Momentum vs time", "Number of simulation timesteps", "Total momtum of particle system",
+					100);
 			momentumPlot.addDataSeries(momentumXDataSeriesName);
 			momentumPlot.addDataSeries(momentumYDataSeriesName);
 			momentumPlot.addDataSeries(momentumZDataSeriesName);
 			momentumPlot.setVisible(true);
+		}
+		if (plotMomentumDiff) {
+			momentumDiffPlot = new RealtimePlot("Momentum Differences over time", "Number of simulation timesteps",
+					"Difference in momentum from previous timestep", 100);
+			momentumDiffPlot.addDataSeries(momentumXDiffDataSeriesName);
+			momentumDiffPlot.addDataSeries(momentumYDiffDataSeriesName);
+			momentumDiffPlot.addDataSeries(momentumZDiffDataSeriesName);
+			momentumDiffPlot.setVisible(true);
 		}
 	}
 
@@ -96,17 +110,27 @@ public class Updater implements ActionListener {
 
 			lastTime = curTime;
 		}
-		if(plotTotalMomentum){
+		if (plotTotalMomentum || plotMomentumDiff) {
 			double momentumX = 0, momentumY = 0, momentumZ = 0;
-			for(Particle p : particles){
+			for (Particle p : particles) {
 				Vec3D momentumVec = p.getMomentum();
 				momentumX += momentumVec.v1;
 				momentumY += momentumVec.v2;
 				momentumZ += momentumVec.v3;
 			}
-			momentumPlot.addData(momentumXDataSeriesName, nSteps, momentumX);
-			momentumPlot.addData(momentumYDataSeriesName, nSteps, momentumY);
-			momentumPlot.addData(momentumZDataSeriesName, nSteps, momentumZ);
+			if (plotTotalMomentum) {
+				momentumPlot.addData(momentumXDataSeriesName, nSteps, momentumX);
+				momentumPlot.addData(momentumYDataSeriesName, nSteps, momentumY);
+				momentumPlot.addData(momentumZDataSeriesName, nSteps, momentumZ);
+			}
+			if(plotMomentumDiff){
+				momentumDiffPlot.addData(momentumXDiffDataSeriesName, nSteps, momentumX - prevMomentumX );
+				momentumDiffPlot.addData(momentumYDiffDataSeriesName, nSteps, momentumY - prevMomentumY);
+				momentumDiffPlot.addData(momentumZDiffDataSeriesName, nSteps, momentumZ - prevMomentumZ);
+				prevMomentumX = momentumX;
+				prevMomentumY = momentumY;
+				prevMomentumZ = momentumZ;
+			}
 		}
 		nSteps++;
 	}

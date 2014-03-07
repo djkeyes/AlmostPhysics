@@ -40,13 +40,4 @@ public class Simulation {
 		updater.start();
 	}
 	
-
-
-	private class MouseInput extends MouseAdapter {
-
-		@Override
-		public void mouseClicked(MouseEvent e) {
-			
-		}
-	}
 }
