@@ -14,6 +14,9 @@ public class Updater implements ActionListener {
 	private IParticleDisplay display;
 	private List<Particle> particles;
 
+	// TODO: make an interface for plotting arbitrary statistics from this simulation
+	// SUB-TODO: make an interface for retrieving arbitrary statistics
+	// SUB-TODO: make an interface (maybe just extend this class?) for performing arbitrary functions (like plotting)
 	private int nSteps;
 	// this plots two things
 	// one: the "lag" time--the time it takes between calling a function and calling it again
@@ -29,18 +32,24 @@ public class Updater implements ActionListener {
 	private final String updateTimeDataSeriesName = "Time Required";
 
 	// hopefully this plot is straightforward
-	private static final boolean plotTotalMomentum = true;
+	private static final boolean plotTotalMomentum = false;
 	private RealtimePlot momentumPlot;
 	private final String momentumXDataSeriesName = "X Momentum";
 	private final String momentumYDataSeriesName = "Y Momentum";
 	private final String momentumZDataSeriesName = "Z Momentum";
 
-	private static final boolean plotMomentumDiff = true;
+	private static final boolean plotMomentumDiff = false;
 	private RealtimePlot momentumDiffPlot;
 	private double prevMomentumX, prevMomentumY, prevMomentumZ;
 	private final String momentumXDiffDataSeriesName = "X Momentum";
 	private final String momentumYDiffDataSeriesName = "Y Momentum";
 	private final String momentumZDiffDataSeriesName = "Z Momentum";
+
+	private static final boolean plotEnergy = true;
+	private RealtimePlot energyPlot;
+	private final String totalEnergyDataSeriesName = "Total Energy";
+	private final String kineticEnergyDataSeriesName = "Kinetic Energy";
+	private final String potentialEnergyDataSeriesName = "Potential Energy";
 
 	public Updater(int refreshRate, List<Particle> particles) {
 		timer = new Timer(refreshRate, this);
@@ -70,6 +79,13 @@ public class Updater implements ActionListener {
 			momentumDiffPlot.addDataSeries(momentumYDiffDataSeriesName);
 			momentumDiffPlot.addDataSeries(momentumZDiffDataSeriesName);
 			momentumDiffPlot.setVisible(true);
+		}
+		if (plotEnergy) {
+			energyPlot = new RealtimePlot("Energy of system vs time", "Number of simulation timesteps", "Energy units", 100);
+			energyPlot.addDataSeries(totalEnergyDataSeriesName);
+			energyPlot.addDataSeries(potentialEnergyDataSeriesName);
+			energyPlot.addDataSeries(kineticEnergyDataSeriesName);
+			energyPlot.setVisible(true);
 		}
 	}
 
@@ -123,14 +139,25 @@ public class Updater implements ActionListener {
 				momentumPlot.addData(momentumYDataSeriesName, nSteps, momentumY);
 				momentumPlot.addData(momentumZDataSeriesName, nSteps, momentumZ);
 			}
-			if(plotMomentumDiff){
-				momentumDiffPlot.addData(momentumXDiffDataSeriesName, nSteps, momentumX - prevMomentumX );
+			if (plotMomentumDiff) {
+				momentumDiffPlot.addData(momentumXDiffDataSeriesName, nSteps, momentumX - prevMomentumX);
 				momentumDiffPlot.addData(momentumYDiffDataSeriesName, nSteps, momentumY - prevMomentumY);
 				momentumDiffPlot.addData(momentumZDiffDataSeriesName, nSteps, momentumZ - prevMomentumZ);
 				prevMomentumX = momentumX;
 				prevMomentumY = momentumY;
 				prevMomentumZ = momentumZ;
 			}
+		}
+		if (plotEnergy) {
+			double total = 0, pe = 0, ke = 0;
+			for (Particle p : particles) {
+				total += p.getEnergy();
+				pe += p.getPotentialEnergy();
+				ke += p.getKineticEnergy();
+			}
+			energyPlot.addData(totalEnergyDataSeriesName, nSteps, total);
+//			energyPlot.addData(potentialEnergyDataSeriesName, nSteps, pe);
+//			energyPlot.addData(kineticEnergyDataSeriesName, nSteps, ke);
 		}
 		nSteps++;
 	}

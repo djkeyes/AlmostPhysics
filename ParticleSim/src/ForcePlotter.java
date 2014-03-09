@@ -25,7 +25,7 @@ public class ForcePlotter {
 		for (double i = 0.5; i < 200; i += 0.1) {
 			Particle a = new Particle(new Vec3D(0, 0, 0), 5, 0.01);
 			Particle b = new Particle(new Vec3D(i, 0, 0), 5, 0.01);
-			double pe = f.calcPotential(b, a); // this should only be in x direction
+			double pe = f.calcPotentialEnergy(b, a); // this should only be in x direction
 			potentialEnergyVsDistance.addData(keyPE, i, pe);
 		}
 		potentialEnergyVsDistance.setVisible(true);

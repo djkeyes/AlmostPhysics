@@ -24,7 +24,7 @@ public enum Force {
 			return f;
 		}
 
-		public double calcPotential(Particle first, Particle second) {
+		public double calcPotentialEnergy(Particle first, Particle second) {
 			Vec3D r = Vec3D.subtract(first.x, second.x);
 			return -g * first.m * second.m / r.mag() + c * first.q * second.q / (3 * Math.pow(r.mag(), 3));
 		}
@@ -38,7 +38,7 @@ public enum Force {
 			return f;
 		}
 
-		public double calcPotential(Particle first, Particle second) {
+		public double calcPotentialEnergy(Particle first, Particle second) {
 			Vec3D r = Vec3D.subtract(first.x, second.x);
 			return -g * first.m * second.m / r.mag();
 		}
@@ -46,7 +46,7 @@ public enum Force {
 
 	// global limits to particle forces
 	// TODO: what if we want to throttle cpu and do numerical integration? in that case, we'd want the exact force values
-	private static final boolean ENABLE_MAX_FORCE = true;
+	private static final boolean ENABLE_MAX_FORCE = false;
 	private static final double MAX_FORCE = 500;
 
 	private final ForceFunction myFunction;
@@ -64,8 +64,8 @@ public enum Force {
 		return force;
 	}
 	
-	public double calcPotential(Particle first, Particle second) {
-		return myFunction.calcPotential(first, second);
+	public double calcPotentialEnergy(Particle first, Particle second) {
+		return myFunction.calcPotentialEnergy(first, second);
 	}
 
 	private static abstract class ForceFunction {
@@ -79,7 +79,7 @@ public enum Force {
 		 * 
 		 * @return
 		 */
-		public double calcPotential(Particle first, Particle second) {
+		public double calcPotentialEnergy(Particle first, Particle second) {
 			throw new UnsupportedOperationException();
 		}
 	}

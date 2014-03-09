@@ -1,4 +1,5 @@
 package particles;
+
 import java.util.LinkedList;
 import java.util.List;
 
@@ -6,11 +7,10 @@ import util.Vec3D;
 
 public class Particle {
 
-
 	// instance variables
 	private boolean isDamped = false;
 	private boolean isStatic = false;
-	
+
 	private final double DAMPING_COEFFCIENT = 0.1;
 
 	// position, velocity, acceleration
@@ -24,11 +24,15 @@ public class Particle {
 	protected double m; // package+protected
 	protected double q; // package+protected
 
+	// potential energy
+	protected double pe; // package+protected
+	private double lastPotentialEnergy;
 
 	// constructors
 	public Particle(Vec3D x, double mass) {
 		this(x, mass, new Vec3D());
 	}
+
 	// constructors
 	public Particle(Vec3D x, double mass, double charge) {
 		this(x, mass, charge, new Vec3D());
@@ -36,7 +40,7 @@ public class Particle {
 
 	// constructors
 	public Particle(Vec3D x, double mass, Vec3D v) {
-		this(x, mass, 0,v);
+		this(x, mass, 0, v);
 	}
 
 	public Particle(Vec3D x, double mass, double charge, Vec3D v) {
@@ -45,25 +49,26 @@ public class Particle {
 		this.a = new Vec3D();
 		this.m = mass;
 		this.q = charge;
-		
-		if(STORE_OLD_POSITIONS){
+
+		if (STORE_OLD_POSITIONS) {
 			this.xOld = new LinkedList<Vec3D>();
 			xOld.add(x);
 		}
+		
+		pe = 0;
 	}
 
 	// public member functions
 	public void update(double stepSize) {
 		if (!isStatic) {
-			if(STORE_OLD_POSITIONS){
+			if (STORE_OLD_POSITIONS) {
 				xOld.addLast(x);
-				if(xOld.size() > MAX_XOLD_TO_KEEP){
+				if (xOld.size() > MAX_XOLD_TO_KEEP) {
 					xOld.removeFirst();
 				}
 			}
 
-			x = Vec3D.add(x, Vec3D.mult(v, stepSize),
-					Vec3D.mult(a, stepSize * stepSize));
+			x = Vec3D.add(x, Vec3D.mult(v, stepSize), Vec3D.mult(a, stepSize * stepSize));
 		}
 
 		if (isDamped) {
@@ -79,6 +84,9 @@ public class Particle {
 		v.add(Vec3D.mult(a, stepSize));
 
 		a.clear();
+		
+		lastPotentialEnergy = pe;
+		pe = 0;
 	}
 
 	public double getX() {
@@ -118,7 +126,21 @@ public class Particle {
 	protected Vec3D displacement(Particle other) {
 		return Vec3D.subtract(this.x, other.x);
 	}
+
 	public Vec3D getMomentum() {
 		return Vec3D.mult(v, m);
+	}
+
+	public double getEnergy() {
+		// sum of potential and kinetic
+		return getKineticEnergy() + getPotentialEnergy();
+	}
+
+	public double getKineticEnergy() {
+		return m * v.magsq();
+	}
+
+	public double getPotentialEnergy(){
+		return lastPotentialEnergy;
 	}
 }

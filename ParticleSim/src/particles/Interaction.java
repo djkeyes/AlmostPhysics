@@ -5,7 +5,11 @@ import util.Vec3D;
 
 public class Interaction {
 
-	private static Force defaultForceModel = Force.C_4TH_INVERSE_M_SQUARE_INVERSE;
+	private static Force defaultForceModel = Force.M_SQUARE_INVERSE;
+
+	// TODO: figure out a better way to handle the how-to-calculate-potential-energy problem. Should integrate-able forces be a special
+	// subclass? should they handle PE metadata?
+	private final static boolean trackPotentialEnergy = true;
 
 	private Particle first, second;
 
@@ -18,7 +22,7 @@ public class Interaction {
 
 	public void calculate() {
 		Vec3D f = defaultForceModel.calcForce(first, second);
-//		System.out.println(f.mag());
+		// System.out.println(f.mag());
 
 		// calculate the acceleration on each object
 		// F = ma; a = F / m
@@ -30,5 +34,11 @@ public class Interaction {
 
 		first.a.add(a1);
 		second.a.add(a2);
+
+		if (trackPotentialEnergy) {
+			double pe = defaultForceModel.calcPotentialEnergy(first, second);
+			first.pe += pe;
+			second.pe += pe;
+		}
 	}
 }
